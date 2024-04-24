@@ -4,6 +4,7 @@ const head = require("./getHead")
 const oneObj = require("./getCareerObj")
 const cors = require("cors")
 const fs = require("fs")
+const { stringify } = require("querystring")
 const app = express()
 const PORT = 8000
 
@@ -31,46 +32,64 @@ app.get("/", (req, res) => {
 app.get("/generate", async (req, res) => {
     console.log(req.query)
 
-    let name = req.query.name == "" ? "No Name" : req.query.name.trim()
+    let name = (req.query.name == "" || req.query.name == undefined) ? "No Name" : req.query.name.trim()
     name = name.charAt(0).toUpperCase() + name.slice(1)
     let phone = req.query.phone == "" ? "9876543210" : req.query.phone
     let address = req.query.address == "" ? "Earth" : req.query.address
     let district = req.query.district == "" ? "Howrah" : req.query.address
-    let pincode = req.query.address == "" ? "765432" : req.query.address
+    let pincode = req.query.address == "" ? "765 432" : req.query.address
     let seacom = req.query.seacom
     let edu = req.query.edu
     let clgStart = req.query.clgStart == "" ? "1920" : req.query.clgStart
     let clgEnd = req.query.clgEnd == "" ? "Present" : req.query.clgEnd
+    let course = req.query.course == "" ? "Course 1" : req.query.course
+    let board = req.query.board == "" ? "Board 1" : req.query.board
+    let stream = req.query.stream == "" ? "Arts/Commerce/Science Not Provided" : req.query.stream
+    let board2 = req.query.board2 == "" ? "Board 2" : req.query.board2
+    let course2 = req.query.course == "" ? "Course 2" : req.query.course
+    let edu2 = req.query.edu2
+    let clgStart2 = req.query.clgStart == "" ? "1920" : req.query.clgStart2
+    let clgEnd2 = req.query.clgEnd == "" ? "Present" : req.query.clgEnd2
     let email = req.query.email == "" ? "example@gmail.com" : req.query.email
     let bio = req.query.bio == "" ? "No bio" : req.query.bio
     let obj = req.query.obj == "" ? oneObj() : req.query.obj
-    console.log(name, phone, address, email, bio, obj)
+    // console.log(name, phone, address, email, bio, obj)
 
 
 
 
-    let techSkillOptions = ["C", "C++", "Java", "Python", "SQL", "HTML", "CSS", "MS Office"]
-    let softSkillOptions = ["Communication", "Problem SOlving", "Team Work", "Adaptibility", "Creativity", "Emotional Intelligent", "Decision Making"]
+    let techSkillOptions = ["C", "C++", "Java", "Python", "SQL", "MS Office", "HTML", "CSS", "JavaScript", "React JS", "Node JS", "MongoDB", "Cloud Computing"]
+    let softSkillOptions = ["Communication", "Problem Solving", "Team Work", "Adaptibility", "Creativity", "Emotional Intelligent", "Decision Making", "Time Management", "Leadership", "Conflict Resolution", "Critical Thinking", "Attention to Detail", "Resilience", "Networking", "Interpersonal Skills"]
     let langOptions = ["Bengali", "Hindi", "English"];
-    let hobbiesOptions = ["Dance", "Watching Movies & WebSeries", "Travelling", "Photography"]
+    let hobbiesOptions = ["Dance", "Watching Movies & WebSeries", "Travelling", "Photography", "Reading", "Cooking", "Gardening", " Exercising", "Painting", "Playing Musical Instruments", " Hiking/Outdoor Activities", "DIY Crafts", "Gaming", "Fashion"]
+    let hobbiesOptionsDesc = ["Enthusiastic traveler, eager to explore diverse cultures and destinations, seeking adventure and new experiences...", "I enjoy immersing myself in the diverse narratives and captivating visuals of films and web series, finding inspiration and relaxation in the art of storytelling.", "Exploring new places and cultures is my passion, enriching my life with unforgettable experiences and connections.", "Capturing moments and scenes through the lens is my creative outlet, allowing me to preserve memories and express myself artistically."]
+
     let htmlTechSkills = ``;
     let htmlSoftSkills = ``;
     let htmlLangs = ``;
     let htmlHobbies = ``;
     let eduProvided = true;
+    // let eduProvided2 = true;
     let eduHtml = ``;
-    if (req.query.edu == "" && req.query.seacom != 'true') {
+    let eduHtml2 = ``;
+    if (req.query.edu == "" && req.query.seacom != 'true' && req.query.edu2 == "") {
         eduProvided = false
     }
 
     //tech skills into list
-    let tech = req.query.tech.split(",");
     let atleastOneTech = false;
-    tech.forEach((val, index) => {
-        if (val == 'true') {
-            atleastOneTech = true;
-        }
-    })
+    try {
+
+        let tech = req.query.tech.split(",");
+        tech.forEach((val, index) => {
+            if (val == 'true') {
+                atleastOneTech = true;
+            }
+        })
+    }
+    catch {
+        console.log("No tech skills params received")
+    }
     if (atleastOneTech) {
         // console.log(tech, "Tech Skills are there")
         htmlTechSkills = `<ul>`
@@ -88,14 +107,21 @@ app.get("/generate", async (req, res) => {
 
 
     //soft skills into list
-    let soft = req.query.soft.split(",");
     let atleastOneSoft = false;
-    soft.forEach((val, index) => {
-        if (val == 'true') {
-            atleastOneSoft = true;
-        }
-        // console.log(softSkillOptions[index], val)
-    })
+    try {
+
+        let soft = req.query.soft.split(",");
+
+        soft.forEach((val, index) => {
+            if (val == 'true') {
+                atleastOneSoft = true;
+            }
+            // console.log(softSkillOptions[index], val)
+        })
+    }
+    catch {
+        console.log("No Soft skill params recieved")
+    }
     if (atleastOneSoft) {
         // console.log(soft, "SOFT SKILLS ARE THERe")
         htmlSoftSkills = `<ul>`
@@ -112,14 +138,20 @@ app.get("/generate", async (req, res) => {
 
 
     //languages into list
-    let lang = req.query.lang.split(",");
     let atleastOneLang = false;
-    lang.forEach((val, index) => {
-        if (val == 'true') {
-            atleastOneLang = true;
-        }
-        // console.log(langOptions[index], val)
-    })
+    try {
+
+        let lang = req.query.lang.split(",");
+        lang.forEach((val, index) => {
+            if (val == 'true') {
+                atleastOneLang = true;
+            }
+            // console.log(langOptions[index], val)
+        })
+    }
+    catch {
+        console.log("No Language skills params received")
+    }
     if (atleastOneLang) {
         // console.log(lang, "Languages ARE THERe")
         htmlLangs = `<ul>`
@@ -138,41 +170,51 @@ app.get("/generate", async (req, res) => {
 
 
     //hobbies into list
-    let hobbies = req.query.hobbies.split(",");
     let atleastOneHobbie = false;
-    hobbies.forEach((val, index) => {
-        if (val == 'true') {
-            atleastOneHobbie = true;
-        }
-        // console.log(hobbiesOptions[index], val)
-    })
+    try {
+
+        let hobbies = req.query.hobbies.split(",");
+        hobbies.forEach((val, index) => {
+            if (val == 'true') {
+                atleastOneHobbie = true;
+            }
+            // console.log(hobbiesOptions[index], val)
+        })
+    }
+    catch {
+        console.log("No hobbies param received")
+    }
     if (atleastOneHobbie) {
         // console.log(hobbies, "Hobbies ARE THERe")
         htmlHobbies += `
         <div class="mb-5">
-            <h3 class="text-blue-500  font-semibold tracking-wide">Hobbies & Interests</h3>
-            <div>
-                <h5 class="font-semibold">Dance Default from HTML boiler Plate</h5>
-                <p class="opacity-70">Passionate about dancing, particularly choreography, reflecting my dedication and creativity in this expressive art form.
-                </p>
-            </div>
-            
-            <!-- <div>${htmlHobbies}</div> -->                
-    `
+         <h3 class="text-blue-500  font-semibold tracking-wide">Hobbies & Interests</h3>
+         
+        `
+        //     htmlHobbies+= `
+        //         <h3 class="text-blue-500  font-semibold tracking-wide">Hobbies & Interests</h3>
+        //         <div>
+        //             <h5 class="font-semibold">Dance Default from HTML boiler Plate</h5>
+        //             <p class="opacity-70">Passionate about dancing, particularly choreography, reflecting my dedication and creativity in this expressive art form.
+        //             </p>
+        //         </div>
+
+        //         <!-- <div>${htmlHobbies}</div> -->                
+        // `
         hobbies.forEach((val, index) => {
             if (val == 'true') {
                 let temp = `<div>
                 <h5 class="font-semibold">${hobbiesOptions[index]}</h5>
-                <p class="opacity-70">Enthusiastic traveler, eager to explore diverse cultures and destinations, seeking adventure and new experiences
+                <p class="opacity-70">${hobbiesOptionsDesc[index]}
                 </p>
             </div>`
                 htmlHobbies += temp;
             }
         })
-        htmlHobbies += `    </div>
+        htmlHobbies += `   
         </div>
         `
-        console.log(htmlHobbies, " HTML Hobbies")
+        // console.log(htmlHobbies, " HTML Hobbies")
     }
 
 
@@ -207,13 +249,27 @@ app.get("/generate", async (req, res) => {
             <h5>
             <span class="font-semibold">
                 ${edu}
-            </span>, Location - <i>Arts/Commerce/Science</i>
+            </span>, Location- ${course} - <i>Arts/Commerce/Science</i>
             </h5>
             <span class="text-[12px] h-fit leading-3">${clgStart} - ${clgEnd}</span>
-            <p class="opacity-70">Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati vel culpa omnis numquam consectetur maiores..</p>
+            <p class="opacity-70">Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati vel culpa omnis numquam consectetur maiores.. ${board}</p>
             </div>
             `
         }
+        if (edu2 != "") {
+            eduHtml += `
+            <div>
+            <h5>
+            <span class="font-semibold">
+                ${edu2}
+            </span>, Location - ${course2} - <i>${stream}</i>
+            </h5>
+            <span class="text-[12px] h-fit leading-3">${clgStart2} - ${clgEnd2 == "" ? "Present" : clgEnd2}</span>
+            <p class="opacity-70">Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati vel culpa omnis numquam consectetur maiores..${board2}</p>
+            </div>
+            `
+        }
+        eduHtml += `</div>`
     }
 
 
@@ -223,10 +279,18 @@ app.get("/generate", async (req, res) => {
         const browser = await puppeteer.launch()
         const page = await browser.newPage();
 
+        // Convert object to stringify
+
+        console.log(JSON.stringify(req.query))
+
+        fs.appendFile("request_data.txt", JSON.stringify(req.query) + " \n", () => {
+            console.log("Saved files")
+        })
+
 
         let htmlHeader = `
 <body>
-    <header class="flex justify-between p-4 m-1 ">
+    <header class="flex justify-between p-4 m-2 ">
         <div class="grow w-80 m-2">
             <span class="text-4xl ">${name}</span>
             <!-- (req.query.name)?req.query.name:"No Name" -->
@@ -258,8 +322,8 @@ app.get("/generate", async (req, res) => {
             </div>
             <!-- div class="mb-5" -->
             ${eduHtml}  
+            ${htmlHobbies}
             </div>
-            
     `
         // let htmlHobbie = `
         //     <div class="mb-5">
@@ -285,13 +349,6 @@ app.get("/generate", async (req, res) => {
                 <h5 class="text-blue-500  font-semibold tracking-wide">Technical Skills</h5>
                 <ul>
                     <li>C</li>
-                    <li>C++</li>
-                    <li>Java</li>
-                    <li>Python</li>
-                    <li>SQL</li>
-                    <li>HTML</li>
-                    <li>CSS</li>
-                    <li>MS Office</li>
                 </ul>
                 ${htmlTechSkills}
             </div>
@@ -299,12 +356,6 @@ app.get("/generate", async (req, res) => {
                 <h5 class="text-blue-500  font-semibold tracking-wide">Soft Skills</h5>
                 <ul>
                     <li>Communication</li>
-                    <li>Problem Solving</li>
-                    <li>Team Work</li>
-                    <li>Adaptibility</li>
-                    <li>Creativity</li>
-                    <li>Emotional Intelligent</li>
-                    <li>Decision Making</li>
                 </ul>
                 ${htmlSoftSkills}
             </div>
@@ -312,8 +363,6 @@ app.get("/generate", async (req, res) => {
                 <h5 class="text-blue-500  font-semibold tracking-wide">Languages</h5>
                 <ul>
                     <li>Bengali</li>
-                    <li>Hindi</li>
-                    <li>English</li>
                 </ul>
                 ${htmlLangs}
             </div>
@@ -324,8 +373,8 @@ app.get("/generate", async (req, res) => {
 
 </html>
         `
-        let htmlContent = head + htmlHeader + htmlMain + htmlHobbies + htmlSkills;
-        console.log(htmlContent)
+        let htmlContent = head + htmlHeader + htmlMain + htmlSkills;
+        // console.log(htmlContent)
 
         await page.setContent(htmlContent);
         const pdfBuffer = await page.pdf({ format: 'A4' });
@@ -339,6 +388,7 @@ app.get("/generate", async (req, res) => {
 
         // Send the PDF buffer as the response
         fs.writeFileSync(`./saved/${filename}`, pdfBuffer,)
+
         res.send(pdfBuffer);
     }
     catch (error) {
