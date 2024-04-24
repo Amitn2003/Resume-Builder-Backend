@@ -2,6 +2,7 @@ const express = require("express")
 const puppeteer = require("puppeteer")
 const head = require("./getHead")
 const oneObj = require("./getCareerObj")
+const oneBio = require("./getBioObj")
 const cors = require("cors")
 const fs = require("fs")
 const { stringify } = require("querystring")
@@ -51,8 +52,8 @@ app.get("/generate", async (req, res) => {
     let clgStart2 = req.query.clgStart == "" ? "1920" : req.query.clgStart2
     let clgEnd2 = req.query.clgEnd == "" ? "Present" : req.query.clgEnd2
     let email = req.query.email == "" ? "example@gmail.com" : req.query.email
-    let bio = req.query.bio == "" ? "No bio" : req.query.bio
-    let obj = req.query.obj == "" ? oneObj() : req.query.obj
+    let bio = (req.query.bio == "" || req.query.bio == undefined) ? oneBio() : req.query.bio
+    let obj = (req.query.obj == "" || req.query.obj == undefined)? oneObj() : req.query.obj
     // console.log(name, phone, address, email, bio, obj)
 
 
@@ -78,9 +79,10 @@ app.get("/generate", async (req, res) => {
 
     //tech skills into list
     let atleastOneTech = false;
+    let tech;
     try {
 
-        let tech = req.query.tech.split(",");
+        tech = req.query.tech.split(",");
         tech.forEach((val, index) => {
             if (val == 'true') {
                 atleastOneTech = true;
@@ -108,9 +110,10 @@ app.get("/generate", async (req, res) => {
 
     //soft skills into list
     let atleastOneSoft = false;
+    let soft;
     try {
 
-        let soft = req.query.soft.split(",");
+        soft = req.query.soft.split(",");
 
         soft.forEach((val, index) => {
             if (val == 'true') {
@@ -139,9 +142,10 @@ app.get("/generate", async (req, res) => {
 
     //languages into list
     let atleastOneLang = false;
+    let lang;
     try {
 
-        let lang = req.query.lang.split(",");
+        lang = req.query.lang.split(",");
         lang.forEach((val, index) => {
             if (val == 'true') {
                 atleastOneLang = true;
@@ -171,9 +175,10 @@ app.get("/generate", async (req, res) => {
 
     //hobbies into list
     let atleastOneHobbie = false;
+    let hobbies;
     try {
 
-        let hobbies = req.query.hobbies.split(",");
+        hobbies = req.query.hobbies.split(",");
         hobbies.forEach((val, index) => {
             if (val == 'true') {
                 atleastOneHobbie = true;
@@ -283,7 +288,7 @@ app.get("/generate", async (req, res) => {
 
         console.log(JSON.stringify(req.query))
 
-        fs.appendFile("request_data.txt", JSON.stringify(req.query) + " \n", () => {
+        fs.appendFile("request_data.txt", JSON.stringify(req.query) + " \n\n", () => {
             console.log("Saved files")
         })
 
@@ -295,11 +300,7 @@ app.get("/generate", async (req, res) => {
             <span class="text-4xl ">${name}</span>
             <!-- (req.query.name)?req.query.name:"No Name" -->
             <br>
-            <span>
-                BCA graduate with a fervent coding passion and a thirst for learning, aspiring to excel in software
-                development by applying programming skills and
-                embracing continuous growth and innovation
-            </span> <span> ${bio} </span>
+            <span> ${bio} </span>
         </div>
         <div class="align-middle text-center p-1">
             <div class="text-sm"><!--31/3 Bangal Para 1st bylane -->${address}
@@ -317,7 +318,7 @@ app.get("/generate", async (req, res) => {
             <div class="mb-5">
                 <h3 class="text-blue-500  font-semibold tracking-wide">Career Objective</h3>
                 <p>
-                    Seeking a challenging position in software development where I can utilize my skills and knowledge to contribute to innovative projects while continuously learning and growing in the field.
+                    ${obj}
                 </p>
             </div>
             <!-- div class="mb-5" -->
@@ -347,23 +348,17 @@ app.get("/generate", async (req, res) => {
             <!-- Right -->
             <div class="mb-5">
                 <h5 class="text-blue-500  font-semibold tracking-wide">Technical Skills</h5>
-                <ul>
-                    <li>C</li>
-                </ul>
+                
                 ${htmlTechSkills}
             </div>
             <div class="mb-5">
                 <h5 class="text-blue-500  font-semibold tracking-wide">Soft Skills</h5>
-                <ul>
-                    <li>Communication</li>
-                </ul>
+                
                 ${htmlSoftSkills}
             </div>
             <div class="mb-5">
                 <h5 class="text-blue-500  font-semibold tracking-wide">Languages</h5>
-                <ul>
-                    <li>Bengali</li>
-                </ul>
+                
                 ${htmlLangs}
             </div>
         </div>
@@ -383,11 +378,11 @@ app.get("/generate", async (req, res) => {
 
         // Set response headers for PDF
         res.setHeader('Content-Type', 'application/pdf');
-        let filename = `${Math.floor(Math.random() * 999999)}_sample.pdf`
-        res.setHeader('Content-Disposition', `attachment; filename=${filename}`);
+        // let filename = `${Math.floor(Math.random() * 999999)}_sample.pdf`
+        // res.setHeader('Content-Disposition', `attachment; filename=${filename}`);
 
         // Send the PDF buffer as the response
-        fs.writeFileSync(`./saved/${filename}`, pdfBuffer,)
+        // fs.writeFileSync(`./saved/${filename}`, pdfBuffer,)
 
         res.send(pdfBuffer);
     }
@@ -399,7 +394,16 @@ app.get("/generate", async (req, res) => {
 
 
 
-
+app.get("/secret-data", (req, res) => {
+    let data;
+    try {
+        
+        data = fs.readFileSync("request_data.txt", "utf-8")
+    }catch {
+        res.send("ERrrorrr")
+    }
+    res.json(data)
+})
 
 
 
