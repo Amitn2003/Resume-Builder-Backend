@@ -7,7 +7,7 @@ const cors = require("cors")
 const fs = require("fs")
 const { stringify } = require("querystring")
 const app = express()
-const PORT = 8000
+const PORT = 3000
 
 app.use(cors())
 
