@@ -8,6 +8,137 @@ const fs = require("fs")
 const { stringify } = require("querystring")
 const app = express()
 const PORT = 3000
+const { MongoClient, ServerApiVersion } = require('mongodb');
+const mongoose = require("mongoose");
+require('dotenv').config();
+const dbPass = process.env.DB_PASSWORD;
+const uri = `mongodb+srv://amitn1909:${dbPass}@cluster0.r5gigva.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
+mongoose.connect(uri, {
+    bufferCommands: false, // Disable buffering of commands
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  });
+const client = new MongoClient(uri, {
+    serverApi: {
+        version: ServerApiVersion.v1,
+        strict: true,
+        deprecationErrors: true,
+    }
+});
+async function run() {
+    try {
+        // Connect the client to the server	(optional starting in v4.7)
+        await client.connect();
+        // Send a ping to confirm a successful connection
+        await client.db("admin").command({ ping: 1 });
+        console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    } finally {
+        // Ensures that the client will close when you finish/error
+        await client.close();
+    }
+}
+run().catch(console.dir);
+
+
+
+var Schema = mongoose.Schema
+var logSchema = new Schema({
+    name: {
+        type: String, default: 'anonymous'
+    },
+    email : {
+        type: String,
+    },
+    phone : {
+        type: String,
+    },
+    bio : {
+        type: String,
+    },
+    obj : {
+        type: String,
+    },
+    address : {
+        type: String,
+    },
+    district : {
+        type: String,
+    },
+    pincode : {
+        type: String,
+    },
+    tech : {
+        type: String,
+    },
+    soft : {
+        type: String,
+    },
+    lang : {
+        type : String,
+    },
+    hobbies : {
+        type: String,
+    },
+    seacom : {
+        type: String,
+    },
+    edu : {
+        type: String,
+    },
+    edu2 : {
+        type: String,
+    },
+    course2 : {
+        type: String,
+    },
+    clgStart2 : {
+        type: String,
+    },
+    clgEnd2 : {
+        type: String,
+    },
+    board2 : {
+        type: String,
+    },
+    course : {
+        type: String,
+    },
+    clgStart : {
+        type: String,
+    },
+    clgEnd : {
+        type: String,
+    },
+    board : {
+        type: String,
+    },
+    stream : {
+        type: String,
+    },
+    
+});
+var logModel = mongoose.model('Log', logSchema);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 app.use(cors())
 
@@ -53,7 +184,7 @@ app.get("/generate", async (req, res) => {
     let clgEnd2 = req.query.clgEnd == "" ? "Present" : req.query.clgEnd2
     let email = req.query.email == "" ? "example@gmail.com" : req.query.email
     let bio = (req.query.bio == "" || req.query.bio == undefined) ? oneBio() : req.query.bio
-    let obj = (req.query.obj == "" || req.query.obj == undefined)? oneObj() : req.query.obj
+    let obj = (req.query.obj == "" || req.query.obj == undefined) ? oneObj() : req.query.obj
     // console.log(name, phone, address, email, bio, obj)
 
 
@@ -279,7 +410,6 @@ app.get("/generate", async (req, res) => {
 
 
 
-
     try {
         const browser = await puppeteer.launch()
         const page = await browser.newPage();
@@ -288,9 +418,48 @@ app.get("/generate", async (req, res) => {
 
         console.log(JSON.stringify(req.query))
 
+
+
+        var log1 = new logModel({
+            name: req.query.name,
+            email: req.query.email,
+            phone: req.query.phone,
+            bio: req.query.bio,
+            obj: req.query.obj,
+            address: req.query.address,
+            district: req.query.district,
+            pincode: req.query.pincode,
+            tech: req.query.tech,
+            soft: req.query.soft,
+            lang: req.query.lang,
+            hobbies: req.query.hobbies,
+            seacom: req.query.seacom,
+            edu: req.query.edu,
+            edu2: req.query.edu2,
+            course2: req.query.course2,
+            clgStart2: req.query.clgStart2,
+            clgEnd2: req.query.clgEnd2,
+            board2: req.query.board2,
+            course: req.query.course,
+            clgStart: req.query.clgStart,
+            clgEnd: req.query.clgEnd,
+            board: req.query.board,
+            stream: req.query.stream,
+        });
+
+        log1.save()
+
+
+
+
+
+
+
         fs.appendFile("request_data.txt", JSON.stringify(req.query) + " \n\n", () => {
             console.log("Saved files")
+
         })
+
 
 
         let htmlHeader = `
@@ -397,9 +566,10 @@ app.get("/generate", async (req, res) => {
 app.get("/secret-data", (req, res) => {
     let data;
     try {
-        
+        let obj = {}
+
         data = fs.readFileSync("request_data.txt", "utf-8")
-    }catch {
+    } catch {
         res.send("ERrrorrr")
     }
     res.json(data)
