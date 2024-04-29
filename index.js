@@ -15,8 +15,8 @@ const dbPass = process.env.DB_PASSWORD;
 const uri = `mongodb+srv://amitn1909:${dbPass}@cluster0.r5gigva.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
 mongoose.connect(uri, {
     bufferCommands: false, // Disable buffering of commands
-    useNewUrlParser: true,
-    useUnifiedTopology: true
+    // useNewUrlParser: true,
+    // useUnifiedTopology: true
   });
 const client = new MongoClient(uri, {
     serverApi: {
