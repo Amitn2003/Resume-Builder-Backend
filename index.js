@@ -191,8 +191,18 @@ app.get("/generate", async (req, res) => {
     let techSkillOptions = ["C", "C++", "Java", "Python", "SQL", "MS Office", "HTML", "CSS", "JavaScript", "React JS", "Node JS", "MongoDB", "Cloud Computing"]
     let softSkillOptions = ["Communication", "Problem Solving", "Team Work", "Adaptibility", "Creativity", "Emotional Intelligent", "Decision Making", "Time Management", "Leadership", "Conflict Resolution", "Critical Thinking", "Attention to Detail", "Resilience", "Networking", "Interpersonal Skills"]
     let langOptions = ["Bengali", "Hindi", "English"];
-    let hobbiesOptions = ["Dance", "Watching Movies & WebSeries", "Travelling", "Photography", "Reading", "Cooking", "Gardening", " Exercising", "Painting", "Playing Musical Instruments", " Hiking/Outdoor Activities", "DIY Crafts", "Gaming", "Fashion"]
-    let hobbiesOptionsDesc = ["Enthusiastic traveler, eager to explore diverse cultures and destinations, seeking adventure and new experiences...", "I enjoy immersing myself in the diverse narratives and captivating visuals of films and web series, finding inspiration and relaxation in the art of storytelling.", "Exploring new places and cultures is my passion, enriching my life with unforgettable experiences and connections.", "Capturing moments and scenes through the lens is my creative outlet, allowing me to preserve memories and express myself artistically."]
+    let hobbiesOptions = ["Dance", "Watching Movies & WebSeries", "Travelling", "Photography", "Reading", "Cooking", "Gardening", "Exercising", "Painting", "Playing Musical Instruments", " Hiking/Outdoor Activities", "DIY Crafts", "Gaming", "Fashion"]
+    let hobbiesOptionsDesc = [
+        "Enthusiastic traveler, eager to explore diverse cultures and destinations, seeking adventure and new experiences...", 
+        "I enjoy immersing myself in the diverse narratives and captivating visuals of films and web series, finding inspiration and relaxation in the art of storytelling.", "Exploring new places and cultures is my passion, enriching my life with unforgettable experiences and connections.", "Capturing moments and scenes through the lens is my creative outlet, allowing me to preserve memories and express myself artistically.", "Immerse yourself in the boundless realms of literature, where every page unveils new adventures, perspectives, and knowledge. Reading is my gateway to exploration, enlightenment, and endless possibilities.", "Transforming ingredients into culinary masterpieces, I find joy and fulfillment in the kitchen. Experimenting with flavors, textures, and techniques, cooking allows me to express my creativity while nourishing both body and soul.", 
+        "In the tranquil embrace of nature, I cultivate vibrant gardens teeming with life and color. Gardening is my sanctuary, where I nurture plants, cultivate beauty, and find solace in the rhythm of growth and renewal.",
+        "Embrace the exhilarating journey of physical fitness, where each workout is a step towards strength, vitality, and well-being. Through exercise, I challenge my limits, energize my spirit, and embrace a lifestyle of vitality and resilience.","With a brush in hand and a world of colors at my disposal, I embark on a journey of artistic expression. Painting allows me to translate emotions, dreams, and visions onto canvas, creating visual symphonies that resonate with the soul.",
+        "Delve into the enchanting world of melodies and rhythms, where each note is a brushstroke painting the canvas of sound. Playing musical instruments is my language of emotion, expression, and connection, weaving stories that transcend time and space.",
+        "Venture into the great outdoors, where every trail beckons with the promise of adventure and discovery. Hiking and outdoor activities are my gateway to exploration, offering solace, serenity, and a profound connection with nature.",
+        "Explore the realm of creativity and craftsmanship, where ordinary materials transform into extraordinary creations. Engaging in DIY crafts is my avenue for self-expression, innovation, and the joy of bringing imagination to life.",
+        "Enter immersive worlds of fantasy and challenge, where every level conquered is a triumph of skill and strategy. Gaming is my portal to adventure, camaraderie, and the thrill of overcoming obstacles in virtual realms.",
+        "Embracing style as a form of self-expression, I thrive in the realm of clothing innovation, celebrating diversity and individuality through every ensemble."
+    ]
 
     let htmlTechSkills = ``;
     let htmlSoftSkills = ``;
@@ -372,7 +382,7 @@ app.get("/generate", async (req, res) => {
             </span>, Howrah - <i>BCA</i>
             </h5>
             <span class="text-[12px] h-fit leading-3">2022 - Present</span>
-            <p class="opacity-70">Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae, iusto!Molestiae, iusto!Molestiae, iusto!.</p>
+            <p class="opacity-70">A well known college! Studying BCA from here...</p>
             </div>
             `
             eduHtml += temp
@@ -383,10 +393,10 @@ app.get("/generate", async (req, res) => {
             <h5>
             <span class="font-semibold">
                 ${edu}
-            </span>, Location- ${course} - <i>Arts/Commerce/Science</i>
+            </span>, Location- ${course} -
             </h5>
             <span class="text-[12px] h-fit leading-3">${clgStart} - ${clgEnd}</span>
-            <p class="opacity-70">Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati vel culpa omnis numquam consectetur maiores.. ${board}</p>
+            <p class="opacity-70">The univercity or board is : ${board}</p>
             </div>
             `
         }
@@ -399,7 +409,7 @@ app.get("/generate", async (req, res) => {
             </span>, Location - ${course2} - <i>${stream}</i>
             </h5>
             <span class="text-[12px] h-fit leading-3">${clgStart2} - ${clgEnd2 == "" ? "Present" : clgEnd2}</span>
-            <p class="opacity-70">Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati vel culpa omnis numquam consectetur maiores..${board2}</p>
+            <p class="opacity-70">I completed ${stream} from ${board2} board</p>
             </div>
             `
         }
