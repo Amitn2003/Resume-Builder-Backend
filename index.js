@@ -17,7 +17,7 @@ mongoose.connect(uri, {
     bufferCommands: false, // Disable buffering of commands
     // useNewUrlParser: true,
     // useUnifiedTopology: true
-  });
+});
 const client = new MongoClient(uri, {
     serverApi: {
         version: ServerApiVersion.v1,
@@ -46,76 +46,76 @@ var logSchema = new Schema({
     name: {
         type: String, default: 'anonymous'
     },
-    email : {
+    email: {
         type: String,
     },
-    phone : {
+    phone: {
         type: String,
     },
-    bio : {
+    bio: {
         type: String,
     },
-    obj : {
+    obj: {
         type: String,
     },
-    address : {
+    address: {
         type: String,
     },
-    district : {
+    district: {
         type: String,
     },
-    pincode : {
+    pincode: {
         type: String,
     },
-    tech : {
+    tech: {
         type: String,
     },
-    soft : {
+    soft: {
         type: String,
     },
-    lang : {
-        type : String,
-    },
-    hobbies : {
+    lang: {
         type: String,
     },
-    seacom : {
+    hobbies: {
         type: String,
     },
-    edu : {
+    seacom: {
         type: String,
     },
-    edu2 : {
+    edu: {
         type: String,
     },
-    course2 : {
+    edu2: {
         type: String,
     },
-    clgStart2 : {
+    course2: {
         type: String,
     },
-    clgEnd2 : {
+    clgStart2: {
         type: String,
     },
-    board2 : {
+    clgEnd2: {
         type: String,
     },
-    course : {
+    board2: {
         type: String,
     },
-    clgStart : {
+    course: {
         type: String,
     },
-    clgEnd : {
+    clgStart: {
         type: String,
     },
-    board : {
+    clgEnd: {
         type: String,
     },
-    stream : {
+    board: {
         type: String,
     },
-    
+    stream: {
+        type: String,
+    },
+
 });
 var logModel = mongoose.model('Log', logSchema);
 
@@ -168,10 +168,10 @@ app.get("/generate", async (req, res) => {
     name = name.charAt(0).toUpperCase() + name.slice(1)
     let phone = req.query.phone == "" ? "9876543210" : req.query.phone
     let address = req.query.address == "" ? "Earth" : req.query.address
-    let district = req.query.district == "" ? "Howrah" : req.query.address
-    let pincode = req.query.address == "" ? "765 432" : req.query.address
+    let district = req.query.district == "" ? "Howrah" : req.query.district
+    let pincode = req.query.pincode == "" ? "765 432" : req.query.pincode
     let seacom = req.query.seacom
-    let edu = req.query.edu
+    let edu = req.query.edu 
     let clgStart = req.query.clgStart == "" ? "1920" : req.query.clgStart
     let clgEnd = req.query.clgEnd == "" ? "Present" : req.query.clgEnd
     let course = req.query.course == "" ? "Course 1" : req.query.course
@@ -185,9 +185,7 @@ app.get("/generate", async (req, res) => {
     let email = req.query.email == "" ? "example@gmail.com" : req.query.email
     let bio = (req.query.bio == "" || req.query.bio == undefined) ? oneBio() : req.query.bio
     let obj = (req.query.obj == "" || req.query.obj == undefined) ? oneObj() : req.query.obj
-    // console.log(name, phone, address, email, bio, obj)
-
-
+    
 
 
     let techSkillOptions = ["C", "C++", "Java", "Python", "SQL", "MS Office", "HTML", "CSS", "JavaScript", "React JS", "Node JS", "MongoDB", "Cloud Computing"]
@@ -451,17 +449,6 @@ app.get("/generate", async (req, res) => {
 
 
 
-
-
-
-
-        fs.appendFile("request_data.txt", JSON.stringify(req.query) + " \n\n", () => {
-            console.log("Saved files")
-
-        })
-
-
-
         let htmlHeader = `
 <body>
     <header class="flex justify-between p-4 m-2 ">
@@ -515,21 +502,29 @@ app.get("/generate", async (req, res) => {
         let htmlSkills = `
         <div class="min-w-44"> 
             <!-- Right -->
+            `
+        if (atleastOneTech) {
+            htmlSkills += `
             <div class="mb-5">
                 <h5 class="text-blue-500  font-semibold tracking-wide">Technical Skills</h5>
                 
                 ${htmlTechSkills}
-            </div>
-            <div class="mb-5">
-                <h5 class="text-blue-500  font-semibold tracking-wide">Soft Skills</h5>
-                
-                ${htmlSoftSkills}
-            </div>
-            <div class="mb-5">
-                <h5 class="text-blue-500  font-semibold tracking-wide">Languages</h5>
-                
-                ${htmlLangs}
-            </div>
+            </div>`
+        }
+        if (atleastOneSoft) {
+            htmlSkills += `<div class="mb-5">
+            <h5 class="text-blue-500  font-semibold tracking-wide">Soft Skills</h5>
+            
+            ${htmlSoftSkills}
+        </div>`
+        }
+        if (atleastOneLang) {
+            htmlSkills += `<div class="mb-5">
+            <h5 class="text-blue-500  font-semibold tracking-wide">Languages</h5>
+            ${htmlLangs}
+        </div>`
+        }
+        htmlSkills += `
         </div>
 
     </main>
@@ -563,17 +558,7 @@ app.get("/generate", async (req, res) => {
 
 
 
-app.get("/secret-data", (req, res) => {
-    let data;
-    try {
-        let obj = {}
 
-        data = fs.readFileSync("request_data.txt", "utf-8")
-    } catch {
-        res.send("ERrrorrr")
-    }
-    res.json(data)
-})
 
 
 
